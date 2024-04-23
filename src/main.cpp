@@ -6,8 +6,6 @@
 #include <3outof6.h>
 #include <mbus_packet.h>
 
-
-#define CC1101_CS          5
 #define CC1101_GDO0        17
 #define CC1101_GDO2        4
 
@@ -31,11 +29,9 @@ IRAM_ATTR void rxFifoISR()
   if (RXinfo.start == true)
   {  
     // Read the 3 first bytes
-    //halRfReadFifo(RXinfo.pByteIndex, 3);
     cc1101_readBurstReg(RXinfo.pByteIndex, CC1101_RXFIFO, 3);
     
     // - Calculate the total number of bytes to receive -
-    // T-Mode
     // Possible improvment: Check the return value from the deocding function,
     // and abort RX if coding error. 
     decode3outof6(RXinfo.pByteIndex, bytesDecoded, 0);
@@ -208,7 +204,7 @@ void decodeTechemWaterMeters() {
 void setup() {
   Serial.begin(115200);
   
-  pinMode(CC1101_CS, OUTPUT);
+  pinMode(SS, OUTPUT);
   pinMode(CC1101_GDO0, INPUT);
   pinMode(CC1101_GDO2, INPUT);
 
